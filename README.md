@@ -1,6 +1,6 @@
 # Introdução
 
-Este repositório contém a atividade **Teste Caixa Cinza com Supabase e Postman**, da disciplina **UX/UI e Testes de Software** (Facens).
+Este repositório tem a minha atividade de **Teste Caixa Cinza com Supabase e Postman**, da matéria de UX/UI e Testes de Software.
 
 | | |
 |---|---|
@@ -10,7 +10,7 @@ Este repositório contém a atividade **Teste Caixa Cinza com Supabase e Postman
 | **GitHub** | [Matheusnardi10](https://github.com/Matheusnardi10) |
 | **Data dos testes** | 01/11/2026 |
 
-A atividade consiste em montar um ambiente de autenticação por e-mail e senha no **Supabase** e validá-lo com testes funcionais de **caixa cinza** feitos no **Postman Desktop**, sem nenhuma interface gráfica. Todo o processo está documentado neste README, e as evidências (prints) foram produzidas por mim durante a atividade.
+Na prática, eu criei um sistema de login por e-mail e senha no Supabase e testei ele pelo Postman, sem fazer nenhuma tela. A ideia era ver se a API autentica quando deve e recusa quando deve. Tudo o que fiz está documentado aqui no README, e os prints são das minhas próprias execuções.
 
 ### Estrutura do repositório
 
@@ -25,9 +25,7 @@ A atividade consiste em montar um ambiente de autenticação por e-mail e senha 
 
 # Objetivo da Atividade
 
-Compreender e aplicar testes de caixa cinza em uma API de autenticação, usando ferramentas de mercado para configurar, executar e validar testes funcionais.
-
-Na caixa cinza, o testador conhece parte da estrutura do sistema: o endpoint, a forma de autenticação, os headers, o corpo (body) JSON e as respostas HTTP, mas não o código interno.
+O objetivo era aprender a fazer testes de caixa cinza em uma API de autenticação. Caixa cinza quer dizer que eu sei algumas coisas de como a API funciona (o endereço dela, os headers, o formato do JSON e o que ela responde), mas não vejo o código por dentro.
 
 Durante a atividade foram realizados:
 
@@ -57,7 +55,7 @@ Durante a atividade foram realizados:
 
 Foi utilizada a autenticação por **e-mail e senha** (*Email provider*). Em **Authentication → Sign In / Providers**, o provider **Email** está **Enabled**.
 
-A opção **Confirm email** foi **desabilitada**, para que o usuário de teste possa fazer login sem precisar confirmar o e-mail por mensagem. Por isso foi possível usar um e-mail de teste.
+Usei autenticação por **e-mail e senha**. Deixei o **Confirm email desligado** de propósito: com ele ligado, o usuário só consegue logar depois de confirmar o e-mail, e eu ia precisar de um e-mail real com acesso à caixa de entrada. Desligando, o usuário de teste já nasce confirmado e eu consigo usar um e-mail fictício só para testar.
 
 ![Autenticação por e-mail habilitada](prints/03-autenticacao-email.png)
 
@@ -91,7 +89,7 @@ Instalei o **Postman Desktop** e criei um workspace em branco chamado **Caixa Ci
 
 ### Environment
 
-Criei o environment **Supabase Auth** e o selecionei como ambiente ativo. As variáveis são:
+Coloquei tudo em variáveis para não ter que digitar a URL, a chave e a senha em cada requisição. A `api_key` e a `password` eu marquei como *secret*, para elas não aparecerem nos prints nem irem para o GitHub.
 
 | Variável | Descrição |
 |---|---|
@@ -200,10 +198,11 @@ Cada requisição tem testes na aba *Scripts*:
 
 ### Erros encontrados durante a atividade
 
-Nenhum dos cenários apresentou falha: todos se comportaram como esperado. Os problemas que apareceram foram de configuração e foram corrigidos antes dos testes:
+Nenhum cenário deu resultado diferente do esperado. Os problemas que tive foram mais de configuração:
 
-- Em um primeiro momento, os headers foram preenchidos na aba **Params** (virando parâmetros na URL) em vez da aba **Headers**. Depois de corrigir, o login funcionou.
-- A requisição inicial tinha o método exibido como `GET` na lateral até ser salva como `POST`.
+- **Headers no lugar errado.** Na primeira vez, preenchi `apikey`, `Authorization` e `Content-Type` na aba **Params** em vez da aba **Headers**. Com isso eles viraram parâmetros na URL e a requisição não funcionou. Percebi olhando a URL, que estava enorme, e depois de mover para a aba certa o login deu 200.
+- **Qual chave usar.** No painel do Supabase aparecem a chave `anon` e a `publishable`. Usei a `anon`, porque ela serve tanto no header `apikey` quanto no `Authorization`.
+- **Sugestões do Postman.** Nas respostas de erro, o Postman ficava sugerindo "Fix" para corrigir a requisição. Ignorei, porque o erro era justamente o resultado que eu queria testar.
 
 ---
 
@@ -263,16 +262,12 @@ Os arquivos exportados do Postman estão em `/postman/`: a collection e o enviro
 
 # Conclusão
 
-Os testes foram executados corretamente e os 5 cenários obrigatórios foram cobertos, com evidências reais de cada um. A autenticação funcionou como esperado: o login válido retornou `200 OK` com o `access_token`, e todos os cenários inválidos foram negados com `400` e uma mensagem de erro.
+Consegui executar todos os testes e os 5 cenários deram o resultado esperado. A autenticação funcionou: o login válido devolveu **200 OK** com o `access_token`, e todos os cenários de erro foram recusados com **400** e uma mensagem. No Runner, os 10 testes automáticos passaram.
 
-**Dificuldades:** o principal ponto foi na configuração inicial do Postman, quando os headers foram preenchidos na aba errada (Params) e a requisição não funcionou até a correção. Outros pontos foram entender onde ficam as chaves da API no painel do Supabase e cuidar para não expor chaves, tokens e senhas nos prints e nos arquivos, já que o repositório é público.
+**Dificuldades:** a que mais me atrapalhou foi o Postman no começo, quando coloquei os headers na aba errada e demorei para entender por que não funcionava. Também tive que procurar onde ficavam a URL e a chave no painel do Supabase, e tomei cuidado para não deixar chave, token e senha aparecendo nos prints, já que o repositório é público.
 
-**Falhas identificadas:** nenhuma falha funcional. Só observei que a API devolve a mesma mensagem para senha errada e para usuário inexistente, o que é uma proteção contra a descoberta de e-mails cadastrados.
+**Falhas:** não encontrei nenhuma falha. Uma coisa que me chamou atenção foi que senha errada, e-mail que não existe e credenciais aleatórias devolvem **a mesma mensagem** ("Invalid login credentials"). No começo achei estranho, mas entendi que é uma proteção: se a API dissesse "esse e-mail não existe", qualquer pessoa conseguiria descobrir quem tem conta.
 
-**Melhorias que poderiam ser implementadas:**
-- incluir mais cenários, como e-mail com formato inválido, senha muito curta, tentativas repetidas (limite de requisições) e uso do `refresh_token`;
-- validar o uso do `access_token` em uma rota protegida;
-- executar a collection de forma automática com o Newman (Postman CLI), para rodar os testes a cada alteração;
-- ativar a confirmação de e-mail e testar também esse fluxo.
+**Melhorias:** dava para testar mais casos, como e-mail com formato inválido, senha muito curta e várias tentativas seguidas (para ver o bloqueio por excesso de tentativas). Também daria para usar o `access_token` em uma rota protegida e rodar a collection automaticamente com o Newman.
 
-**Importância dos testes caixa cinza em APIs:** como o testador conhece o endpoint, os headers e o formato das mensagens, é possível montar cenários mais precisos do que em um teste caixa preta e verificar com mais segurança a autenticação, as validações e as mensagens de erro, sem precisar ler o código. Isso permite achar problemas antes de implementar a interface, quando corrigir é mais barato.
+**Por que o teste caixa cinza é útil:** como eu já sei o endpoint, os headers e o formato das respostas, consigo montar cenários bem direcionados e validar a autenticação sem precisar mexer no código nem ter uma tela pronta. Dá para achar problema de login bem antes de o sistema ficar pronto.
