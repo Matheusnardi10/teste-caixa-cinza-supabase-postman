@@ -53,9 +53,9 @@ Durante a atividade foram realizados:
 
 ### Tipo de autenticação
 
-Foi utilizada a autenticação por **e-mail e senha** (*Email provider*). Em **Authentication → Sign In / Providers**, o provider **Email** está **Enabled**.
+Usei autenticação por **e-mail e senha**. Em **Authentication → Sign In / Providers**, o provider **Email** está **Enabled**.
 
-Usei autenticação por **e-mail e senha**. Deixei o **Confirm email desligado** de propósito: com ele ligado, o usuário só consegue logar depois de confirmar o e-mail, e eu ia precisar de um e-mail real com acesso à caixa de entrada. Desligando, o usuário de teste já nasce confirmado e eu consigo usar um e-mail fictício só para testar.
+Deixei o **Confirm email desligado** de propósito: com ele ligado, o usuário só consegue logar depois de confirmar o e-mail, e eu ia precisar de um e-mail real com acesso à caixa de entrada. Desligando, o usuário de teste já nasce confirmado e eu consigo usar um e-mail fictício só para testar.
 
 ![Autenticação por e-mail habilitada](prints/03-autenticacao-email.png)
 
@@ -99,7 +99,7 @@ Coloquei tudo em variáveis para não ter que digitar a URL, a chave e a senha e
 | `password` | Senha do usuário de teste. Marcada como *secret* |
 | `access_token` | Preenchida automaticamente pelo script do login válido |
 
-A finalidade das variáveis é não repetir dados em cada requisição e manter as credenciais fora dos arquivos da collection: as requisições usam `{{base_url}}`, `{{api_key}}`, `{{email}}` e `{{password}}`.
+Nas requisições eu uso `{{base_url}}`, `{{api_key}}`, `{{email}}` e `{{password}}`, em vez dos valores reais.
 
 ![Environment com as variáveis](prints/07-environment.png)
 
